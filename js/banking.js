@@ -1,76 +1,74 @@
-// ====================================================
-// handle deposit part event
-// ====================================================
-function getInputValue(){
-    const depositInput = document.getElementById('deposit-input');
-    const newDepositAmountText = depositInput.value;
-    const newDepositAmount = parseFloat(newDepositAmountText);
-    // clear the input fild
-    depositInput.value = '';
-    return newDepositAmount;
+// ================= all input prossing part =========================
+function getInputValue(id){
+    const inputId = document.getElementById(id);
+    const inputValueText = inputId.value;
+    const inputValueNumber = parseFloat(inputValueText);
+    inputId.value = '';
+    return inputValueNumber;
 }
 
+// ================= all display card prossing part =========================
+function displayCard(id, newAmount){
+    const displayCardId = document.getElementById(id);
+    const cardAmountText = displayCardId.innerText;
+    const preCardAmountNumber = parseFloat(cardAmountText);
+    const cardTotal = preCardAmountNumber + newAmount;
+    return displayCardId.innerText = cardTotal;
+}
 
+// ================= Balance handleing part =========================
+function getCurrentBalance(){
+    const balanceId = document.getElementById('balance-total');
+    const balanceAmountText = balanceId.innerText;
+    const preBalanceAmountNumber = parseFloat(balanceAmountText);
+    return preBalanceAmountNumber;
+}
+function balance(currentAmount, isTrue){
+    const balanceId = document.getElementById('balance-total');
+    const preBalanceAmountNumber = getCurrentBalance();
+    if (isTrue == true){
+        const finalBalance = preBalanceAmountNumber + currentAmount;
+        balanceId.innerText = finalBalance;
+    }else{
+        const finalBalance = preBalanceAmountNumber - currentAmount;
+        balanceId.innerText = finalBalance;
+    }
+}
+
+// =======================================================
+// ================= Deposit Part ========================
+// =======================================================
 document.getElementById('deposit-btn').addEventListener('click', function(){
-    // get deposit input value
-    const depositInput = getInputValue();
+    // input part
+    const inputFild = getInputValue('deposit-input');
 
-    // get deposit display card;
-    const depositTotal = document.getElementById('deposit-total');
-    const previousDepositAmountText = depositTotal.innerText;
-    const previousDepositAmount = parseFloat(previousDepositAmountText);
-
-    // input money add with display card money
-    const newDepositTotal = previousDepositAmount + newDepositAmount;
-    depositTotal.innerText = newDepositTotal;
-    
-
-
-
-
-    // update total account current balance after "Deposit"
-    const balanceTotal = document.getElementById('balance-total');
-    const balanceAmountText = balanceTotal.innerText;
-    const preBalanceAmount = parseFloat(balanceAmountText);
-
-    // add deposit money with main total balance;
-    const newBalanceTotal = preBalanceAmount + newDepositAmount;
-    balanceTotal.innerText = newBalanceTotal;
+    if (inputFild > 0){
+        // display on card proces
+        displayCard('deposit-total', inputFild)
+        // total balance handle
+        balance(inputFild, true);
+    }else{
+        alert('Please Input a Positive Number!!!')
+    }
     
 })
 
-
-
-// ====================================================
-    // handel withdraw part event
-// ====================================================
+// =======================================================
+// ================= withdraw Part =======================
+// =======================================================
 document.getElementById('withdraw-btn').addEventListener('click', function(){
-    // withdraw input part
-    const withdrawInput = document.getElementById('withdraw-input');
-    const withdrawAmountText = withdrawInput.value;
-    const withdrawAmount = parseFloat(withdrawAmountText);
+    // input part
+    const inputFild = getInputValue('withdraw-input');
+    const currentBalance = getCurrentBalance();
 
-    // withdraw display card
-    const withdrawTotal = document.getElementById('withdraw-total');
-    const previousWithdrawAmountText = withdrawTotal.innerText;
-    const previousWithdrawAmount = parseFloat(previousWithdrawAmountText);
-    
-    // sum withdraw input && withdraw display
-    const newWithdrawTotal = previousWithdrawAmount + withdrawAmount;
-    withdrawTotal.innerText = newWithdrawTotal;
-    // clear the withdraw input fild
-    withdrawInput.value = '';
-
-
-
-
-    // update total account current balance after "withdraw"
-    const withdrawBalanceTotal = document.getElementById('balance-total');
-    const withdrawBalanceTotalText = withdrawBalanceTotal.innerText;
-    const previousBalance = parseFloat(withdrawBalanceTotalText);
-
-    // minus withdraw money with main total balance;
-    const newAfterWithdrawBalance = previousBalance - withdrawAmount;
-    withdrawBalanceTotal.innerText = newAfterWithdrawBalance;
+    if (inputFild > 0 && currentBalance > inputFild){
+        // display on card proces
+        displayCard('withdraw-total', inputFild);
+        // total balance handle
+        balance(inputFild, false);
+    }
+    if(currentBalance < inputFild){
+        alert('Your Balance Is Very Low, You Can Not Withdraw');
+    }
 
 })
